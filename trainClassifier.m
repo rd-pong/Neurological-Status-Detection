@@ -1,4 +1,4 @@
-function [trainedClassifier, validationAccuracy] = trainClassifier(trainingData)
+function [trainedClassifier, validationAccuracy] = trainClassifier_3knnpca(trainingData)
 % [trainedClassifier, validationAccuracy] = trainClassifier(trainingData)
 % 返回经过训练的分类器及其准确度。以下代码重新创建在 Classification Learner App 中训
 % 练的分类模型。您可以使用该生成的代码基于新数据自动训练同一模型，或通过它了解如何以程序化方
