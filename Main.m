@@ -58,7 +58,7 @@ clear; clc; close all;
 [X19_SpO2HR] = SpO2HRToMatrix('nonEEGdataset/Subject19_SpO2HR', 0);
 [X20_SpO2HR] = SpO2HRToMatrix('nonEEGdataset/Subject20_SpO2HR', 0);
 
-%% Train & Test
+%% Split data
 X_stack = [
         X1_AccTempEDA X1_SpO2HR(1:height(X1_AccTempEDA), :);
         X2_AccTempEDA X2_SpO2HR(1:height(X2_AccTempEDA), :);
@@ -80,7 +80,9 @@ X_stack = [
         X18_AccTempEDA X18_SpO2HR(1:height(X18_AccTempEDA), :);
         X19_AccTempEDA X19_SpO2HR(1:height(X19_AccTempEDA), :)];
 Y_stack = [Y1; Y2; Y3; Y4; Y5; Y6; Y7; Y8; Y9; Y10; Y11; Y12; Y13; Y14; Y15; Y16; Y17; Y18; Y19];
+XY = [X_stack array2table(Y_stack)];
 
+%% Train & Test
 mdl = fitcknn(X_stack, Y_stack, 'NumNeighbors', 3, 'Standardize', 1);
 label = predict(mdl, [X20_AccTempEDA X20_SpO2HR(1:height(X20_AccTempEDA), :)]);
 
@@ -97,5 +99,5 @@ for i = 1:length(label)
 end
 
 success_rate = sum(correct_mark) / length(label)
-XY = [X_stack array2table(Y_stack)];
+
 % [label,score,cost] = predict(mdl, X2)
