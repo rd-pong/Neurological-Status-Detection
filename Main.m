@@ -14,7 +14,21 @@ clear; clc; close all;
 %     sig_struct.('sub'+string(i)) = sig_5;
 % end
 
-%% Read in AccTempEDA
+%% Read in and stack in for loop?
+X_stack = [];
+Y_stack = [];
+
+for i = 1:20
+    [X_AccTempEDA, Y] = AccTempEDAToMatrix(char('nonEEGdataset/Subject' + string(i) + '_AccTempEDA'), 0);
+    [X_SpO2HR] = SpO2HRToMatrix(char('nonEEGdataset/Subject' + string(i) + '_AccTempEDA'), 0);
+    X_stack = [
+            X_AccTempEDA X_SpO2HR(1:height(X_AccTempEDA), :); 
+            X_stack];
+    Y_stack = [Y; Y_stack];
+end
+XY = [X_stack array2table(Y_stack)];
+
+%% LEGACY/DEBUG ONLY --- Read in AccTempEDA / SpO2HR
 [X1_AccTempEDA, Y1] = AccTempEDAToMatrix('nonEEGdataset/Subject1_AccTempEDA', 0);
 [X2_AccTempEDA, Y2] = AccTempEDAToMatrix('nonEEGdataset/Subject2_AccTempEDA', 0);
 [X3_AccTempEDA, Y3] = AccTempEDAToMatrix('nonEEGdataset/Subject3_AccTempEDA', 0);
@@ -36,7 +50,6 @@ clear; clc; close all;
 [X19_AccTempEDA, Y19] = AccTempEDAToMatrix('nonEEGdataset/Subject19_AccTempEDA', 0);
 [X20_AccTempEDA, Y20] = AccTempEDAToMatrix('nonEEGdataset/Subject20_AccTempEDA', 0);
 
-%% Read in SpO2HR
 [X1_SpO2HR] = SpO2HRToMatrix('nonEEGdataset/Subject1_SpO2HR', 0);
 [X2_SpO2HR] = SpO2HRToMatrix('nonEEGdataset/Subject2_SpO2HR', 0);
 [X3_SpO2HR] = SpO2HRToMatrix('nonEEGdataset/Subject3_SpO2HR', 0);
@@ -58,36 +71,36 @@ clear; clc; close all;
 [X19_SpO2HR] = SpO2HRToMatrix('nonEEGdataset/Subject19_SpO2HR', 0);
 [X20_SpO2HR] = SpO2HRToMatrix('nonEEGdataset/Subject20_SpO2HR', 0);
 
-%% Split data
-X_stack = [
-        X1_AccTempEDA X1_SpO2HR(1:height(X1_AccTempEDA), :);
-        X2_AccTempEDA X2_SpO2HR(1:height(X2_AccTempEDA), :);
-        X3_AccTempEDA X3_SpO2HR(1:height(X3_AccTempEDA), :);
-        X4_AccTempEDA X4_SpO2HR(1:height(X4_AccTempEDA), :);
-        X5_AccTempEDA X5_SpO2HR(1:height(X5_AccTempEDA), :);
-        X6_AccTempEDA X6_SpO2HR(1:height(X6_AccTempEDA), :);
-        X7_AccTempEDA X7_SpO2HR(1:height(X7_AccTempEDA), :);
-        X8_AccTempEDA X8_SpO2HR(1:height(X8_AccTempEDA), :);
-        X9_AccTempEDA X9_SpO2HR(1:height(X9_AccTempEDA), :);
-        X10_AccTempEDA X10_SpO2HR(1:height(X10_AccTempEDA), :);
-        X11_AccTempEDA X11_SpO2HR(1:height(X11_AccTempEDA), :);
-        X12_AccTempEDA X12_SpO2HR(1:height(X12_AccTempEDA), :);
-        X13_AccTempEDA X13_SpO2HR(1:height(X13_AccTempEDA), :);
-        X14_AccTempEDA X14_SpO2HR(1:height(X14_AccTempEDA), :);
-        X15_AccTempEDA X15_SpO2HR(1:height(X15_AccTempEDA), :);
-        X16_AccTempEDA X16_SpO2HR(1:height(X16_AccTempEDA), :);
-        X17_AccTempEDA X17_SpO2HR(1:height(X17_AccTempEDA), :);
-        X18_AccTempEDA X18_SpO2HR(1:height(X18_AccTempEDA), :);
-        X19_AccTempEDA X19_SpO2HR(1:height(X19_AccTempEDA), :)];
-Y_stack = [Y1; Y2; Y3; Y4; Y5; Y6; Y7; Y8; Y9; Y10; Y11; Y12; Y13; Y14; Y15; Y16; Y17; Y18; Y19];
-XY = [X_stack array2table(Y_stack)];
+% % Split data
+% X_stack = [
+%         X1_AccTempEDA X1_SpO2HR(1:height(X1_AccTempEDA), :);
+%         X2_AccTempEDA X2_SpO2HR(1:height(X2_AccTempEDA), :);
+%         X3_AccTempEDA X3_SpO2HR(1:height(X3_AccTempEDA), :);
+%         X4_AccTempEDA X4_SpO2HR(1:height(X4_AccTempEDA), :);
+%         X5_AccTempEDA X5_SpO2HR(1:height(X5_AccTempEDA), :);
+%         X6_AccTempEDA X6_SpO2HR(1:height(X6_AccTempEDA), :);
+%         X7_AccTempEDA X7_SpO2HR(1:height(X7_AccTempEDA), :);
+%         X8_AccTempEDA X8_SpO2HR(1:height(X8_AccTempEDA), :);
+%         X9_AccTempEDA X9_SpO2HR(1:height(X9_AccTempEDA), :);
+%         X10_AccTempEDA X10_SpO2HR(1:height(X10_AccTempEDA), :);
+%         X11_AccTempEDA X11_SpO2HR(1:height(X11_AccTempEDA), :);
+%         X12_AccTempEDA X12_SpO2HR(1:height(X12_AccTempEDA), :);
+%         X13_AccTempEDA X13_SpO2HR(1:height(X13_AccTempEDA), :);
+%         X14_AccTempEDA X14_SpO2HR(1:height(X14_AccTempEDA), :);
+%         X15_AccTempEDA X15_SpO2HR(1:height(X15_AccTempEDA), :);
+%         X16_AccTempEDA X16_SpO2HR(1:height(X16_AccTempEDA), :);
+%         X17_AccTempEDA X17_SpO2HR(1:height(X17_AccTempEDA), :);
+%         X18_AccTempEDA X18_SpO2HR(1:height(X18_AccTempEDA), :);
+%         X19_AccTempEDA X19_SpO2HR(1:height(X19_AccTempEDA), :)];
+% Y_stack = [Y1; Y2; Y3; Y4; Y5; Y6; Y7; Y8; Y9; Y10; Y11; Y12; Y13; Y14; Y15; Y16; Y17; Y18; Y19];
+% XY = [X_stack array2table(Y_stack)];
 
 %% Train & Test
 mdl = fitcknn(X_stack, Y_stack, 'NumNeighbors', 3, 'Standardize', 1);
 label = predict(mdl, [X20_AccTempEDA X20_SpO2HR(1:height(X20_AccTempEDA), :)]);
 
+% success rate count
 correct_mark = zeros(length(label), 1);
-
 for i = 1:length(label)
 
     if label(i) == Y20(i)
@@ -97,7 +110,7 @@ for i = 1:length(label)
     end
 
 end
-
 success_rate = sum(correct_mark) / length(label)
 
-% [label,score,cost] = predict(mdl, X2)
+% 
+rloss = resubLoss(mdl)

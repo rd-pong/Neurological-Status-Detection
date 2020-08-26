@@ -31,10 +31,11 @@ window1 = 1; %Rectangular window
 window2 = 0; %Hamming window
 
 % sig_5(:, 1) --> accelaration on x
-[tm_frame, frame_mean, frame_max, frame_min, frame_change] = td_analysis(sig_5(:, 1), tm, Fs, L, R, window1, debug_fig);
+[tm_frame, SPO2_mean, SPO2_max, SPO2_min, SPO2_change] = td_analysis(sig_5(:, 1), tm, Fs, L, R, window1, debug_fig);
+[~, HR_mean, HR_max, HR_min, HR_change] = td_analysis(sig_5(:, 1), tm, Fs, L, R, window1, debug_fig);
 
 % td_analysis(s, Fs, L, R, window2);
 
 %% Return
-X = table(frame_mean, frame_max, frame_min, frame_change);
+X = table(SPO2_mean, SPO2_max, SPO2_min, SPO2_change, HR_mean, HR_max, HR_min, HR_change);
 end
