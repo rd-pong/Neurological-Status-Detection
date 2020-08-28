@@ -14,7 +14,7 @@ function [tm_frame, frame_mean, frame_max, frame_min, frame_change] = td_analysi
 
 % Window setup
 n=0:(L-1); % window range temp
-if window_type == 0
+if window_type == 1
     w=0*(n<0)+1*(n>=0&n<=(L-1))+0*(n>(L-1)); %Rectangular window
 else 
 	w=0.54*(n>=0&n<=(L-1))-0.46*cos(2*pi*n/(L-1)).*(n>=0&n<=(L-1)); %Hamming window

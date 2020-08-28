@@ -71,31 +71,31 @@ XY = [X_stack array2table(Y_stack)];
 [X19_SpO2HR] = SpO2HRToMatrix('nonEEGdataset/Subject19_SpO2HR', 0);
 [X20_SpO2HR] = SpO2HRToMatrix('nonEEGdataset/Subject20_SpO2HR', 0);
 
-% % Split data
-% X_stack = [
-%         X1_AccTempEDA X1_SpO2HR(1:height(X1_AccTempEDA), :);
-%         X2_AccTempEDA X2_SpO2HR(1:height(X2_AccTempEDA), :);
-%         X3_AccTempEDA X3_SpO2HR(1:height(X3_AccTempEDA), :);
-%         X4_AccTempEDA X4_SpO2HR(1:height(X4_AccTempEDA), :);
-%         X5_AccTempEDA X5_SpO2HR(1:height(X5_AccTempEDA), :);
-%         X6_AccTempEDA X6_SpO2HR(1:height(X6_AccTempEDA), :);
-%         X7_AccTempEDA X7_SpO2HR(1:height(X7_AccTempEDA), :);
-%         X8_AccTempEDA X8_SpO2HR(1:height(X8_AccTempEDA), :);
-%         X9_AccTempEDA X9_SpO2HR(1:height(X9_AccTempEDA), :);
-%         X10_AccTempEDA X10_SpO2HR(1:height(X10_AccTempEDA), :);
-%         X11_AccTempEDA X11_SpO2HR(1:height(X11_AccTempEDA), :);
-%         X12_AccTempEDA X12_SpO2HR(1:height(X12_AccTempEDA), :);
-%         X13_AccTempEDA X13_SpO2HR(1:height(X13_AccTempEDA), :);
-%         X14_AccTempEDA X14_SpO2HR(1:height(X14_AccTempEDA), :);
-%         X15_AccTempEDA X15_SpO2HR(1:height(X15_AccTempEDA), :);
-%         X16_AccTempEDA X16_SpO2HR(1:height(X16_AccTempEDA), :);
-%         X17_AccTempEDA X17_SpO2HR(1:height(X17_AccTempEDA), :);
-%         X18_AccTempEDA X18_SpO2HR(1:height(X18_AccTempEDA), :);
-%         X19_AccTempEDA X19_SpO2HR(1:height(X19_AccTempEDA), :)];
-% Y_stack = [Y1; Y2; Y3; Y4; Y5; Y6; Y7; Y8; Y9; Y10; Y11; Y12; Y13; Y14; Y15; Y16; Y17; Y18; Y19];
-% XY = [X_stack array2table(Y_stack)];
+% Split data
+X_stack = [
+        X1_AccTempEDA X1_SpO2HR(1:height(X1_AccTempEDA), :);
+        X2_AccTempEDA X2_SpO2HR(1:height(X2_AccTempEDA), :);
+        X3_AccTempEDA X3_SpO2HR(1:height(X3_AccTempEDA), :);
+        X4_AccTempEDA X4_SpO2HR(1:height(X4_AccTempEDA), :);
+        X5_AccTempEDA X5_SpO2HR(1:height(X5_AccTempEDA), :);
+        X6_AccTempEDA X6_SpO2HR(1:height(X6_AccTempEDA), :);
+        X7_AccTempEDA X7_SpO2HR(1:height(X7_AccTempEDA), :);
+        X8_AccTempEDA X8_SpO2HR(1:height(X8_AccTempEDA), :);
+        X9_AccTempEDA X9_SpO2HR(1:height(X9_AccTempEDA), :);
+        X10_AccTempEDA X10_SpO2HR(1:height(X10_AccTempEDA), :);
+        X11_AccTempEDA X11_SpO2HR(1:height(X11_AccTempEDA), :);
+        X12_AccTempEDA X12_SpO2HR(1:height(X12_AccTempEDA), :);
+        X13_AccTempEDA X13_SpO2HR(1:height(X13_AccTempEDA), :);
+        X14_AccTempEDA X14_SpO2HR(1:height(X14_AccTempEDA), :);
+        X15_AccTempEDA X15_SpO2HR(1:height(X15_AccTempEDA), :);
+        X16_AccTempEDA X16_SpO2HR(1:height(X16_AccTempEDA), :);
+        X17_AccTempEDA X17_SpO2HR(1:height(X17_AccTempEDA), :);
+        X18_AccTempEDA X18_SpO2HR(1:height(X18_AccTempEDA), :);
+        X19_AccTempEDA X19_SpO2HR(1:height(X19_AccTempEDA), :)];
+Y_stack = [Y1; Y2; Y3; Y4; Y5; Y6; Y7; Y8; Y9; Y10; Y11; Y12; Y13; Y14; Y15; Y16; Y17; Y18; Y19];
+XY = [X_stack array2table(Y_stack)];
 
-%% Train & Test
+%% kNN Train & Test
 mdl = fitcknn(X_stack, Y_stack, 'NumNeighbors', 3, 'Standardize', 1);
 label = predict(mdl, [X20_AccTempEDA X20_SpO2HR(1:height(X20_AccTempEDA), :)]);
 
@@ -114,3 +114,38 @@ success_rate = sum(correct_mark) / length(label)
 
 % 
 rloss = resubLoss(mdl)
+
+%% saveLearnerForCoder
+saveLearnerForCoder(mdl,'RF_model');
+
+%% Neural Network Train & Test
+X_cell= table2cell(X_stack);
+Y_cell= num2cell(Y_stack);
+XY2 = [array2table(Y_stack) X_stack];
+
+inputSize = 28;
+numHiddenUnits = 100;
+numClasses = 9;
+
+layers = [ ...
+    sequenceInputLayer(inputSize)
+    bilstmLayer(numHiddenUnits,'OutputMode','last')
+    fullyConnectedLayer(numClasses)
+    softmaxLayer
+    classificationLayer]
+
+maxEpochs = 100;
+miniBatchSize = 27;
+
+options = trainingOptions('adam', ...
+    'ExecutionEnvironment','cpu', ...
+    'GradientThreshold',1, ...
+    'MaxEpochs',maxEpochs, ...
+    'MiniBatchSize',miniBatchSize, ...
+    'SequenceLength','longest', ...
+    'Shuffle','never', ...
+    'Verbose',0, ...
+    'Plots','training-progress');
+
+% net = trainNetwork(table2cell(XY2),layers,options);
+net = trainNetwork(X_cell, Y_cell,layers,options);
