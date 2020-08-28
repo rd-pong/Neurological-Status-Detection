@@ -115,7 +115,7 @@ success_rate = sum(correct_mark) / length(label)
 % 
 rloss = resubLoss(mdl)
 
-%% saveLearnerForCoder
+%% Prepare For Coder/Conversion
 saveLearnerForCoder(mdl,'RF_model');
 
 %% Neural Network Train & Test
