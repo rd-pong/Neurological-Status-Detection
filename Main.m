@@ -124,33 +124,29 @@ rloss = resubLoss(mdl)
 saveLearnerForCoder(trainedModel.ClassificationEnsemble,'RF_model');
 
 %% Neural Network Train & Test
-X_cell= table2cell(X_stack);
-Y_cell= num2cell(Y_stack);
-XY2 = [array2table(Y_stack) X_stack];
+% reorganize training data/label
+X_array = table2array(X_stack);
+Y_array = Y_stack;
+Y_array_flag = [];
+for i = 1: length(Y_array)
+    if Y_array(i) == 0
+        Y_array_flag = [[1 0 0 0]; Y_array_flag];
+    elseif Y_array(i) == 1
+        Y_array_flag = [[0 1 0 0]; Y_array_flag];
+    elseif Y_array(i) == 2
+        Y_array_flag = [[0 0 1 0]; Y_array_flag];
+    elseif Y_array(i) == 3
+        Y_array_flag = [[0 0 0 1]; Y_array_flag];
+    end
+end
 
-inputSize = 28;
-numHiddenUnits = 100;
-numClasses = 9;
+% design/train network
+net = feedforwardnet(4);
+[net,tr] = train(net, X_array', Y_array_flag');
 
-layers = [ ...
-    sequenceInputLayer(inputSize)
-    bilstmLayer(numHiddenUnits,'OutputMode','last')
-    fullyConnectedLayer(numClasses)
-    softmaxLayer
-    classificationLayer]
+% test network
+sim(net,output0') % work
+classify(net,output0') % not work
+predict(net,output0') % not work
 
-maxEpochs = 100;
-miniBatchSize = 27;
-
-options = trainingOptions('adam', ...
-    'ExecutionEnvironment','cpu', ...
-    'GradientThreshold',1, ...
-    'MaxEpochs',maxEpochs, ...
-    'MiniBatchSize',miniBatchSize, ...
-    'SequenceLength','longest', ...
-    'Shuffle','never', ...
-    'Verbose',0, ...
-    'Plots','training-progress');
-
-% net = trainNetwork(table2cell(XY2),layers,options);
-net = trainNetwork(X_cell, Y_cell,layers,options);
+% how to validate/test?
