@@ -14,7 +14,7 @@ clear; clc; close all;
 %     sig_struct.('sub'+string(i)) = sig_5;
 % end
 
-%% Read in and stack using for-loop
+%% Read in and stack in for loop?
 X_stack = [];
 Y_stack = [];
 
@@ -157,13 +157,10 @@ net.b
 % save network for coder
 genFunction(net, 'NN_model', 'MatrixOnly','yes');
 
-%% Get final prediction as 0, 1, 2, 3, rather than [1, 0, 0, 0], [0, 1, 0, 0], ...
-% get result (4*14497-->1*14497)
+%% Evaluate NN accuracy
 y_distance_to_1 = abs(y - ones(size(y)));
-y_predict = [];
 for i = 1: length(y)
-    column_buff = y_distance_to_1(:, 1)
-    min_idx = find(column_buff == min(column_buff(:))) - 1;
-    y_predict = [min_idx y_predict];
+    column = y_distance_to_1(:, 1)
+    min_idx = find(A == min(A(:))) - 1;
+    y_predict = []
 end
-
