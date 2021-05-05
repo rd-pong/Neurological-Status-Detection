@@ -1,6 +1,9 @@
 function [X] = SpO2HRToMatrix(location, debug_fig)
+%
+% Read, clean, window, extract features from training signals (SpO2, HR)
+% return a stacked feature table
+%
 %% Dataset preview
-
 % 'nonEEGdataset/Subject1_SpO2HR'
 
 % return specifications for signals in WFDB records
