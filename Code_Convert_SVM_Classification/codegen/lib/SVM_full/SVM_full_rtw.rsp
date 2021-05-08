@@ -1,8 +1,0 @@
-CompactClassificationECOC.o
-SVM_full.o
-SVM_full_data.o
-SVM_full_initialize.o
-SVM_full_terminate.o
-rtGetInf.o
-rtGetNaN.o
-rt_nonfinite.o
