@@ -1,5 +1,5 @@
 %%%%%%%%%%%%
-%Use this file to peek how signals look like in the dataset
+% Use this file to peek how signals look like in the dataset
 %%%%%%%%%%%%%
 
 %% Preliminaries

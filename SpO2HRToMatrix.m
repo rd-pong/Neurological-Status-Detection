@@ -1,7 +1,9 @@
 function [X] = SpO2HRToMatrix(location, debug_fig)
+% SPO2HRTOMATRIX converts SpO2, HR dataset to feature table and class 
+% labels. Read, clean, window, extract features from signals.
 %
-% Read, clean, window, extract features from training signals (SpO2, HR)
-% return a stacked feature table
+% Input: dataset location, debug option (true/false)
+% Output: a stacked feature table & class label
 %
 %% Dataset preview
 % 'nonEEGdataset/Subject1_SpO2HR'

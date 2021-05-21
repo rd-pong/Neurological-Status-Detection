@@ -1,7 +1,9 @@
 function [X, Y] = AccTempEDAToMatrix(location, debug_fig)
+% ACCTEMPEDATOMATRIX convert Acc, Temp, EDA dataset to feature table and
+% class labels. Read, clean, window, extract features from signals.
 %
-% Read, clean, window, extract features from training signals (Acc,Temp,EDA)
-% return a stacked feature table
+% Input: dataset location, debug option (true/false)
+% Output: a stacked feature table & class label
 %
 
 %% Dataset preview
@@ -73,8 +75,8 @@ status_mark(ann_tm(7):ann_tm(8) - 1) = 2; % 2 emotional stress
 
 if debug_fig
     figure;
-    plot(tm_frame, status_mark); hold on;
-    plot(tm_frame, frame_mean)
+    plot(tm_frame, status_mark); 
+    % hold on; plot(tm_frame, frame_mean)
 end
 
 %% Return

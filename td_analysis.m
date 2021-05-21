@@ -1,15 +1,20 @@
 function [tm_frame, frame_mean, frame_max, frame_min, frame_change] = td_analysis(s, tm, Fs, L, R, window_type, debug_fig)
+% TD_ANALYSIS window and extract features from signals.
 %
-% return mean min max change along with frame indexing given tm/sampling intervals
-%
+% Input: 
+% s     input signal
+% tm    Nx1 vector of doubles representing the sampling intervals.
+% Fs    1xM Double, sampling frequency in Hz of all the signals in the
+%        record.
 % L     window size
 % n     window range
 % R     window shift
-% window1 = 1; --> Rectangular window
-% window2 = 0; --> Hamming window
+% window_type = 1; --> Rectangular window
+%             = 0; --> Hamming window
 % debug_fig set below to 1, if want to show debug figures 
-
-
+%
+% Output: mean min max change along with frame indexing
+%
 %%
 
 % Window setup
